@@ -1,0 +1,37 @@
+/home/vr-lab/Documents/clion-2018.3.1/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/vr-lab/catkin_ws/src/encoder_odom
+-- Using CATKIN_DEVEL_PREFIX: /home/vr-lab/catkin_ws/src/encoder_odom/cmake-build-debug/devel
+-- Using CMAKE_PREFIX_PATH: /home/vr-lab/catkin_ws/devel;/opt/ros/kinetic
+-- This workspace overlays: /home/vr-lab/catkin_ws/devel;/opt/ros/kinetic
+-- Using PYTHON_EXECUTABLE: /usr/bin/python
+-- Using Debian Python package layout
+-- Using empy: /usr/bin/empy
+-- Using CATKIN_ENABLE_TESTING: ON
+-- Call enable_testing()
+-- Using CATKIN_TEST_RESULTS_DIR: /home/vr-lab/catkin_ws/src/encoder_odom/cmake-build-debug/test_results
+-- Found gmock sources under '/usr/src/gmock': gmock will be built
+-- Found gtest sources under '/usr/src/gmock': gtests will be built
+-- Using Python nosetests: /usr/bin/nosetests-2.7
+-- catkin 0.7.18
+-- BUILD_SHARED_LIBS is on
+-- Using these message generators: gencpp;geneus;genlisp;gennodejs;genpy
+CMake Error: File /home/vr-lab/catkin_ws/src/encoder_odom/package.xml does not exist.
+CMake Error at /opt/ros/kinetic/share/catkin/cmake/stamp.cmake:10 (configure_file):
+  configure_file Problem configuring file
+Call Stack (most recent call first):
+  /opt/ros/kinetic/share/catkin/cmake/catkin_package_xml.cmake:72 (stamp)
+  /opt/ros/kinetic/share/catkin/cmake/catkin_package_xml.cmake:50 (_catkin_package_xml)
+  /opt/ros/kinetic/share/catkin/cmake/catkin_package.cmake:99 (catkin_package_xml)
+  CMakeLists.txt:106 (catkin_package)
+
+
+CMake Error at /opt/ros/kinetic/share/catkin/cmake/catkin_package.cmake:116 (message):
+  catkin_package() 'catkin' must be listed as a buildtool dependency in the
+  package.xml
+Call Stack (most recent call first):
+  /opt/ros/kinetic/share/catkin/cmake/catkin_package.cmake:102 (_catkin_package)
+  CMakeLists.txt:106 (catkin_package)
+
+
+-- Configuring incomplete, errors occurred!
+See also "/home/vr-lab/catkin_ws/src/encoder_odom/cmake-build-debug/CMakeFiles/CMakeOutput.log".
+See also "/home/vr-lab/catkin_ws/src/encoder_odom/cmake-build-debug/CMakeFiles/CMakeError.log".

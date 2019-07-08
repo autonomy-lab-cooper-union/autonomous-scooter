@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: cmd_to_steering
+Description: Description of cmd_to_steering
+Version: 0.0.0
+Cflags: -I/usr/local/include
+Libs: -L/usr/local/lib 
+Requires: 

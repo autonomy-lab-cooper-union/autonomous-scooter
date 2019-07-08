@@ -1,0 +1,8 @@
+prefix=/home/vr-lab/catkin_ws/src/cmd_to_ctrl/cmake-build-debug/devel
+
+Name: cmd_to_ctrl
+Description: Description of cmd_to_ctrl
+Version: 0.0.0
+Cflags: -I/home/vr-lab/catkin_ws/src/cmd_to_ctrl/cmake-build-debug/devel/include
+Libs: -L/home/vr-lab/catkin_ws/src/cmd_to_ctrl/cmake-build-debug/devel/lib 
+Requires: 

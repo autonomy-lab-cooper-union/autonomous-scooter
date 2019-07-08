@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: robot_pose_ekf
+Description: Description of robot_pose_ekf
+Version: 1.14.5
+Cflags: -I/usr/local/include
+Libs: -L/usr/local/lib 
+Requires: geometry_msgs message_runtime nav_msgs roscpp sensor_msgs std_msgs

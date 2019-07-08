@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: cmd_to_ctrl
+Description: Description of cmd_to_ctrl
+Version: 0.0.0
+Cflags: -I/usr/local/include
+Libs: -L/usr/local/lib 
+Requires: 

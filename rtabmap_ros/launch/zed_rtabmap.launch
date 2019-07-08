@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!--
+Copyright (c) 2018, STEREOLABS.
+
+All rights reserved.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-->
+<launch>
+    <arg name="zed_namespace"		    	default="zed" />
+
+    <arg name="svo_file"                        default="" /> <!-- <arg name="svo_file" default="path/to/svo/file.svo"> -->
+
+    <arg name="zed_node_name"                   default="zed_node" />
+    <arg name="camera_model"                    default="zed" /> <!-- 'zed' or 'zedm' -->
+    <arg name="publish_urdf"                    default="true" />
+    <!-- my addition -->
+    <arg name="myCompressed"                    default="true" />
+
+
+    
+  
+    <!-- RTAB-map Node-->
+    <include file="$(find rtabmap_ros)/launch/rtabmap.launch">
+      <arg name="rtabmap_args"                  value="--delete_db_on_start" />
+      <arg name="rgb_topic_compressed"               	value="/rgb/image_raw_color/compressed" />
+      <arg name="depth_topic_compressed"             	value="/depth/depth_registered/compressedDepth" />
+      <arg name="rgb_topic"               	value="/rgb/image_raw_color" />
+      <arg name="depth_topic"             	value="/depth/depth_registered" />
+      <arg name="camera_info_topic"       	value="/depth/camera_info" />
+      <arg name="depth_camera_info_topic" 	value="/depth/camera_info" />
+      <arg name="frame_id"                      value="base_link" />
+      <arg name="approx_sync"                   value="true" />
+      <arg name="visual_odometry"               value="false" />
+      <arg name="odom_topic"                    value="/odom" />
+      <arg name="rviz"                          value="true" />
+      
+      <!-- my addition for decompressing images -->
+      <node if="$(arg myCompressed)" name="republish_rgb" type="republish" pkg="image_transport" args="$(arg rgb_image_transport) in:=$(arg rgb_topic_compressed) raw out:=$(arg rgb_topic)" />
+      <node if="$(arg myCompressed)" name="republish_depth" type="republish" pkg="image_transport" args="$(arg depth_image_transport) in:=$(arg depth_topic_compressed) raw out:=$(arg depth_topic)" />
+
+    </include>
+</launch>

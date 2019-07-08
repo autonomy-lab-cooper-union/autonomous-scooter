@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/vr-lab/catkin_ws/src/encoder_odom/cmake-build-debug/devel/setup.sh

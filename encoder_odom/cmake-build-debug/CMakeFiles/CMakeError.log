@@ -1,0 +1,55 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/vr-lab/catkin_ws/src/encoder_odom/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_6e036/fast 
+/usr/bin/make -f CMakeFiles/cmTC_6e036.dir/build.make CMakeFiles/cmTC_6e036.dir/build
+make[1]: Entering directory '/home/vr-lab/catkin_ws/src/encoder_odom/cmake-build-debug/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_6e036.dir/CheckSymbolExists.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_6e036.dir/CheckSymbolExists.c.o   -c /home/vr-lab/catkin_ws/src/encoder_odom/cmake-build-debug/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_6e036
+/home/vr-lab/Documents/clion-2018.3.1/bin/cmake/linux/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6e036.dir/link.txt --verbose=1
+/usr/bin/cc      -rdynamic CMakeFiles/cmTC_6e036.dir/CheckSymbolExists.c.o  -o cmTC_6e036 
+CMakeFiles/cmTC_6e036.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x16): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_6e036.dir/build.make:86: recipe for target 'cmTC_6e036' failed
+make[1]: *** [cmTC_6e036] Error 1
+make[1]: Leaving directory '/home/vr-lab/catkin_ws/src/encoder_odom/cmake-build-debug/CMakeFiles/CMakeTmp'
+Makefile:121: recipe for target 'cmTC_6e036/fast' failed
+make: *** [cmTC_6e036/fast] Error 2
+
+File /home/vr-lab/catkin_ws/src/encoder_odom/cmake-build-debug/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/vr-lab/catkin_ws/src/encoder_odom/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_65e14/fast 
+/usr/bin/make -f CMakeFiles/cmTC_65e14.dir/build.make CMakeFiles/cmTC_65e14.dir/build
+make[1]: Entering directory '/home/vr-lab/catkin_ws/src/encoder_odom/cmake-build-debug/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_65e14.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_65e14.dir/CheckFunctionExists.c.o   -c /home/vr-lab/Documents/clion-2018.3.1/bin/cmake/linux/share/cmake-3.14/Modules/CheckFunctionExists.c
+Linking C executable cmTC_65e14
+/home/vr-lab/Documents/clion-2018.3.1/bin/cmake/linux/bin/cmake -E cmake_link_script CMakeFiles/cmTC_65e14.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=pthread_create    -rdynamic CMakeFiles/cmTC_65e14.dir/CheckFunctionExists.c.o  -o cmTC_65e14 -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_65e14.dir/build.make:86: recipe for target 'cmTC_65e14' failed
+make[1]: *** [cmTC_65e14] Error 1
+make[1]: Leaving directory '/home/vr-lab/catkin_ws/src/encoder_odom/cmake-build-debug/CMakeFiles/CMakeTmp'
+Makefile:121: recipe for target 'cmTC_65e14/fast' failed
+make: *** [cmTC_65e14/fast] Error 2
+
+

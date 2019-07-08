@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/vr-lab/catkin_ws/src/robot_pose_ekf/cmake-build-debug/devel/setup.sh
