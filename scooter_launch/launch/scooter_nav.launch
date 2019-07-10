@@ -33,7 +33,13 @@
     <arg unless="$(arg localization)" name="rtabmap_args" value="--delete_db_on_start"/>
 
     <!-- Use Lidar or not -->
-    <arg name="subscribe_scan"                  default="false" />
+    <arg name="subscribe_scan"                  default="true" />
+
+    <!-- move_base params -->
+    <arg name="odom_frame_id"   default="odom"/>
+    <arg name="base_frame_id"   default="base_link"/>
+    <arg name="global_frame_id" default="map"/>
+    <arg name="custom_param_file" default="$(find turtlebot_navigation)/param/dummy.yaml"/>
 
 
 <!-- ~~~~~~~~~~~~~ Nodes ~~~~~~~~~~~~~~~~~ -->
@@ -81,7 +87,7 @@
             <param name="wait_for_transform_duration"  type="double"   value="$(arg wait_for_transform)"/>
             <param name="subscribe_depth"     type="bool"   value="true"/>
             <param     if="$(arg subscribe_scan)" name="subscribe_scan"      type="bool"   value="true"/>
-            <param unless="$(arg subscribe_scan)" name="subscribe_scan"      type="bool"   value="true"/>
+            <param unless="$(arg subscribe_scan)" name="subscribe_scan"      type="bool"   value="false"/>
             <param name="map_negative_poses_ignored" type="bool" value="true"/>
 
             <!-- When sending goals on /rtabmap/goal topic, use actionlib to communicate with move_base --> 
@@ -149,6 +155,30 @@
             <param name="voxel_size"  type="double" value="0.0"/>
             <param name="approx_sync" type="bool"   value="$(arg approx_sync)"/>
         </node>
-        
     </group>
+
+    <!-- Mmove_base stuff -->
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+        <rosparam file="$(find scooter_launch)/param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find scooter_launch)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />   
+        <rosparam file="$(find scooter_launch)/param/local_costmap_params.yaml" command="load" />   
+        <rosparam file="$(find scooter_launch)/param/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find scooter_launch)/param/dwa_local_planner_params.yaml" command="load" />
+        <rosparam file="$(find scooter_launch)/param/move_base_params.yaml" command="load" />
+        <rosparam file="$(find scooter_launch)/param/global_planner_params.yaml" command="load" />
+        <rosparam file="$(find scooter_launch)/param/navfn_global_planner_params.yaml" command="load" />
+        <!-- external params file that could be loaded into the move_base namespace -->
+        <rosparam file="$(arg custom_param_file)" command="load" />
+        
+        <!-- reset frame_id parameters using user input data -->
+        <param name="global_costmap/global_frame" value="$(arg global_frame_id)"/>
+        <param name="global_costmap/robot_base_frame" value="$(arg base_frame_id)"/>
+        <param name="local_costmap/global_frame" value="$(arg odom_frame_id)"/>
+        <param name="local_costmap/robot_base_frame" value="$(arg base_frame_id)"/>
+        <param name="DWAPlannerROS/global_frame_id" value="$(arg odom_frame_id)"/>
+
+        <remap from="odom" to="$(arg odom_topic)"/>
+        <remap from="scan" to="/$(arg rplidar_namespace)/$(arg rplidar_node_name)/scan"/>
+        <remap from="/map" to="/rtabmap/grid_map" />
+    </node>
 </launch>
