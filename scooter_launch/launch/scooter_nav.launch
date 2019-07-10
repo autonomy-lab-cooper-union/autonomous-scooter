@@ -67,7 +67,7 @@
     <!-- Rplidar Node-->
     <group ns="$(arg rplidar_namespace)">
 
-        <node name="$(arg rplidar_node_name)"   pkg="rplidar_ros"  type="rplidarNode" output="screen">
+        <node name="$(arg rplidar_node_name)1"   pkg="rplidar_ros"  type="rplidarNode" output="screen">
         <param name="serial_port"         type="string" value="/dev/ttyUSB0"/>  
         <param name="serial_baudrate"     type="int"    value="256000"/>
         <param name="frame_id"            type="string" value="laser_link"/>
@@ -76,7 +76,18 @@
         <remap from="/$(arg rplidar_namespace)/scan" to="/$(arg rplidar_namespace)/$(arg rplidar_node_name)/scan" />
         </node>
 
+        <node name="$(arg rplidar_node_name)2"   pkg="rplidar_ros"  type="rplidarNode" output="screen">
+        <param name="serial_port"         type="string" value="/dev/ttyUSB1"/>  
+        <param name="serial_baudrate"     type="int"    value="256000"/>
+        <param name="frame_id"            type="string" value="laser_link"/>
+        <param name="inverted"            type="bool"   value="false"/>
+        <param name="angle_compensate"    type="bool"   value="true"/>
+        <remap from="/$(arg rplidar_namespace)/scan" to="/$(arg rplidar_namespace)/$(arg rplidar_node_name)/scan" />
+        </node>
+
     </group>
+
+    
 
     <!-- RTAL-map Node -->
     <group ns="rtabmap">

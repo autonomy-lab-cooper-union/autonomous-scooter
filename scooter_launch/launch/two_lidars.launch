@@ -1,0 +1,8 @@
+<launch>
+    <include ns="lidar0" file="$(find your_ros_package)/launch/rplidar_arg.launch">
+        <arg name="serial_port" value="/dev/ttyUSB0"/>
+    </include>
+    <include ns="lidar1" file="$(find your_ros_package)/launch/rplidar_arg.launch">
+        <arg name="serial_port" value="/dev/ttyUSB1"/>
+    </include>
+</launch>
