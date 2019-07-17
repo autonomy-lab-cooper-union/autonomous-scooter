@@ -65,9 +65,8 @@
     </group>
 
     <!-- Rplidar Node-->
-    <group ns="$(arg rplidar_namespace)">
-
-        <node name="$(arg rplidar_node_name)1"   pkg="rplidar_ros"  type="rplidarNode" output="screen">
+    <group if="$(arg subscribe_scan)" ns="$(arg rplidar_namespace)">
+        <node name="$(arg rplidar_node_name)"   pkg="rplidar_ros"  type="rplidarNode" output="screen">
         <param name="serial_port"         type="string" value="/dev/ttyUSB0"/>  
         <param name="serial_baudrate"     type="int"    value="256000"/>
         <param name="frame_id"            type="string" value="laser_link"/>
@@ -76,14 +75,24 @@
         <remap from="/$(arg rplidar_namespace)/scan" to="/$(arg rplidar_namespace)/$(arg rplidar_node_name)/scan" />
         </node>
 
-        <node name="$(arg rplidar_node_name)2"   pkg="rplidar_ros"  type="rplidarNode" output="screen">
+        <!-- <node name="$(arg rplidar_node_name)"   pkg="rplidar_ros"  type="rplidarNode" output="screen">
         <param name="serial_port"         type="string" value="/dev/ttyUSB1"/>  
         <param name="serial_baudrate"     type="int"    value="256000"/>
         <param name="frame_id"            type="string" value="laser_link"/>
         <param name="inverted"            type="bool"   value="false"/>
         <param name="angle_compensate"    type="bool"   value="true"/>
         <remap from="/$(arg rplidar_namespace)/scan" to="/$(arg rplidar_namespace)/$(arg rplidar_node_name)/scan" />
-        </node>
+        </node> -->
+        <!-- <launch>
+            <include ns="lidar0" file="$(find rplidar_ros)/launch/rplidar_s1.launch">
+                <arg name="serial_port" value="/dev/ttyUSB0"/>
+                <arg name="frame_id" value="laser_link0"/>
+            </include>
+            <include ns="lidar1" file="$(find rplidar_ros)/launch/rplidar_s1.launch">
+                <arg name="serial_port" value="/dev/ttyUSB1"/>
+                <arg name="frame_id" value="laser_link1"/>
+            </include>
+        </launch> -->
 
     </group>
 
@@ -116,10 +125,17 @@
             <!--param name="odom_tf_linear_variance" value="0.001"/-->
             <!--param name="odom_tf_angular_variance" value="0.001"/-->
             
-            <!-- output -->
+            <!-- scan relevant -->
             <param     if="$(arg subscribe_scan)" name="gen_scan" value="false"/> 
-            <param unless="$(arg subscribe_scan)" name="gen_scan" value="true"/> 
+            <param unless="$(arg subscribe_scan)" name="gen_scan" value="true"/>
+            <param     if="$(arg subscribe_scan)" name="Grid/FromDepth" value="false"/> 
+            <param unless="$(arg subscribe_scan)" name="Grid/FromDepth" value="true"/> 
             
+            <!-- feature type -->
+            <param name="Vis/FeatureType"              type="string" value="4"/>
+            <param name="Kp/DetectorStrategy"          type="string" value="4"/>
+            <param name="FAST/Gpu"                     type="string" value="false"/>
+
             <!-- RTAB-Map's parameters: do "rosrun rtabmap rtabmap (double-dash)params" to see the list of available parameters. -->
             <param name="RGBD/ProximityBySpace"        type="string" value="true"/>   <!-- Local loop closure detection (using estimated position) with locations in WM -->
             <param name="RGBD/OptimizeFromGraphEnd"    type="string" value="false"/>  <!-- Set to false to generate map correction between /map and /odom -->
@@ -136,11 +152,12 @@
             <param name="Reg/Force3DoF"                type="string" value="true"/>
             <param name="GridGlobal/MinSize"           type="string" value="20"/>
 
-            
             <!-- localization mode -->
             <param     if="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="false"/>
             <param unless="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="true"/>
-            <param name="Mem/InitWMWithAllNodes" type="string" value="$(arg localization)"/> 
+            <param name="Mem/InitWMWithAllNodes" type="string" value="$(arg localization)"/>
+
+
         </node>
         
         <!-- visualization with rtabmapviz -->
