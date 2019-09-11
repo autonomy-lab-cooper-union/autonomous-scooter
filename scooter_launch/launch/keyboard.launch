@@ -1,7 +1,16 @@
 <launch>
-    <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard" name="scooter_keyboard" output="screen">
+    <node pkg="cmd_to_ctrl" type="cmd_to_ctrl" name="cmd_to_ctrl" output="screen"/>
+    <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard" output="screen">
         <param name="scale_linear" value="0.5" type="double"/>
         <param name="scale_angular" value="1.5" type="double"/>
         <remap from="scooter_keyboard/cmd_vel" to="cmd_vel"/>
+    </node>
+
+    <node pkg="rosserial_arduino" type="serial_node.py" name="arduino1" output="screen">
+        <param name="port" value="/dev/ttyACM0"/>
+    </node>
+
+    <node pkg="rosserial_arduino" type="serial_node.py" name="arduino2" output="screen">
+        <param name="port" value="/dev/ttyACM1"/>
     </node>
 </launch>

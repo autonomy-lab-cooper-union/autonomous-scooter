@@ -7,7 +7,7 @@ project(cmd_to_ctrl)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs genmsg geometry_msgs message_generation)
+find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs geometry_msgs)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -43,7 +43,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs genmsg geometry_ms
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(DIRECTORY msg FILES Ctrl.msg)
+# add_message_files(DIRECTORY msg FILES Ctrl.msg)
 ## Generate services in the 'srv' folder
 
 ## Generate actions in the 'action' folder
@@ -54,7 +54,7 @@ add_message_files(DIRECTORY msg FILES Ctrl.msg)
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(DEPENDENCIES std_msgs geometry_msgs)
+# generate_messages(DEPENDENCIES std_msgs geometry_msgs)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -85,7 +85,7 @@ generate_messages(DEPENDENCIES std_msgs geometry_msgs)
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
-catkin_package(CATKIN_DEPENDS message_runtime)
+catkin_package(CATKIN_DEPENDS)
 
 ###########
 ## Build ##

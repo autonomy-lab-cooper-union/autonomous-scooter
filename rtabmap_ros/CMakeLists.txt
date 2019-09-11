@@ -22,12 +22,16 @@ find_package(catkin REQUIRED COMPONENTS
              genmsg stereo_msgs move_base_msgs image_geometry 
 )
 
+LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+find_package(G2O REQUIRED)
+
 # Optional components
 find_package(costmap_2d)
 find_package(octomap_msgs)
 find_package(apriltags2_ros)
 find_package(rviz)
 find_package(find_object_2d)
+find_package(G2O REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -164,6 +168,7 @@ include_directories(
   ${OpenCV_INCLUDE_DIRS}
   ${PCL_INCLUDE_DIRS}
   ${catkin_INCLUDE_DIRS}
+  ${G2O_INCLUDE_DIRS}
 )
 
 # libraries
@@ -172,6 +177,7 @@ SET(Libraries
    ${PCL_LIBRARIES}
    ${catkin_LIBRARIES}
    ${RTABMap_LIBRARIES}
+   ${G2O_LIBRARIES}
 )
  
 SET(rtabmap_sync_lib_src
