@@ -2,6 +2,9 @@
 // Created by vr-lab on 7/2/19.
 //
 
+// based on simple car model
+// http://planning.cs.uiuc.edu/node658.html
+
 #include "cmd_to_ctrl.h"
 
 int main(int argc, char **argv) {
@@ -9,7 +12,8 @@ int main(int argc, char **argv) {
 
     ros::NodeHandle n;
 
-    double L = 1;
+    double L;
+    n.getParam("length", L);
 
     ros::Publisher pub_steering = n.advertise<std_msgs::Float64>("control_steering", 1000);
     ros::Publisher pub_speed = n.advertise<std_msgs::Float64>("control_speed", 1000);
@@ -35,5 +39,8 @@ float twist_to_steering(const geometry_msgs::Twist::ConstPtr& msg, const float& 
     if (msg->angular.z == 0.0 || speed == 0.0) {
         return 0.0f;
     }
-    return atan(L*speed/msg->angular.z);
+
+    // add -pi/2 to pi/2
+
+    return atan(L/msg->angular.z*speed/);
 }
