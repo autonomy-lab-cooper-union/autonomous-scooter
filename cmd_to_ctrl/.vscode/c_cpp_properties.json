@@ -1,0 +1,43 @@
+{
+    "configurations": [
+        {
+            "browse": {
+                "databaseFilename": "",
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "includePath": [
+                "/home/autonomylab/catkin_ws/devel/include/**",
+                "/opt/ros/melodic/include/**",
+                "/home/autonomylab/catkin_ws/src/autonomous_scooter/navigation/amcl/include/**",
+                "/home/autonomylab/catkin_ws/src/autonomous_scooter/navigation/base_local_planner/include/**",
+                "/home/autonomylab/catkin_ws/src/autonomous_scooter/navigation/carrot_planner/include/**",
+                "/home/autonomylab/catkin_ws/src/autonomous_scooter/navigation/clear_costmap_recovery/include/**",
+                "/home/autonomylab/catkin_ws/src/autonomous_scooter/cmd_to_ctrl/include/**",
+                "/home/autonomylab/catkin_ws/src/autonomous_scooter/navigation/costmap_2d/include/**",
+                "/home/autonomylab/catkin_ws/src/autonomous_scooter/navigation/dwa_local_planner/include/**",
+                "/home/autonomylab/catkin_ws/src/autonomous_scooter/encoder_odom/include/**",
+                "/home/autonomylab/catkin_ws/src/autonomous_scooter/navigation/global_planner/include/**",
+                "/home/autonomylab/catkin_ws/src/autonomous_scooter/laser_filters/include/**",
+                "/home/autonomylab/catkin_ws/src/autonomous_scooter/navigation/map_server/include/**",
+                "/home/autonomylab/catkin_ws/src/autonomous_scooter/navigation/move_base/include/**",
+                "/home/autonomylab/catkin_ws/src/autonomous_scooter/navigation/move_slow_and_clear/include/**",
+                "/home/autonomylab/catkin_ws/src/autonomous_scooter/navigation/nav_core/include/**",
+                "/home/autonomylab/catkin_ws/src/autonomous_scooter/navigation/navfn/include/**",
+                "/home/autonomylab/catkin_ws/src/autonomous_scooter/ros-bridge/pcl_recorder/include/**",
+                "/home/autonomylab/catkin_ws/src/autonomous_scooter/robot_pose_ekf/include/**",
+                "/home/autonomylab/catkin_ws/src/autonomous_scooter/rosserial/rosserial_server/include/**",
+                "/home/autonomylab/catkin_ws/src/autonomous_scooter/rosserial/rosserial_test/include/**",
+                "/home/autonomylab/catkin_ws/src/autonomous_scooter/navigation/rotate_recovery/include/**",
+                "/home/autonomylab/catkin_ws/src/autonomous_scooter/rtabmap_ros/include/**",
+                "/home/autonomylab/catkin_ws/src/autonomous_scooter/navigation/voxel_grid/include/**",
+                "/usr/include/**"
+            ],
+            "name": "ROS",
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 4
+}

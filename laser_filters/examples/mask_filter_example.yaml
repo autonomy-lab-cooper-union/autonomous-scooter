@@ -1,0 +1,18 @@
+scan_filter_chain:
+- type: LaserArrayFilter
+  name: laser_median_5
+  params: 
+- name: mask
+  type: laser_filters/LaserScanMaskFilter
+  params:
+    masks:
+      laser:
+      - 100
+      - 101
+      - 102
+      - 103
+      - 104
+      - 1000
+      - 1001
+      - 1002
+      laser2: []

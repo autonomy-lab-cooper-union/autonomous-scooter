@@ -41,10 +41,7 @@
     <arg name="global_frame_id" default="map"/>
     <arg name="custom_param_file" default="$(find scooter_launch)/param/dummy.yaml"/>
 
-
 <!-- ~~~~~~~~~~~~~ Nodes ~~~~~~~~~~~~~~~~~ -->
-
-
     <!-- ROS URDF description of the Scooter -->
     <group>
         <param name="scooter_description" textfile="$(find scooter_launch)/urdf/scooter.urdf" />
@@ -53,19 +50,19 @@
         </node>
     </group>
 
-    <!-- base_footprint_publisher -->
-    <node name="base_footprint_publisher" pkg="base_footprint_publisher" type="base_footprint_publisher_node"/>
-
     <!-- ZED Wrapper Node-->
     <group ns="$(arg zed_namespace)">
-
         <include file="$(find zed_wrapper)/launch/zed_camera.launch">
             <arg name="svo_file"            value="$(arg svo_file)" />
             <arg name="node_name"           value="$(arg zed_node_name)" />
             <arg name="camera_model"        value="$(arg camera_model)" />
         </include>
-
     </group>
+
+    <node pkg="laser_filters" type="scan_to_scan_filter_chain" output="screen" name="laser_filter">
+        <remap from="scan" to="/$(arg rplidar_namespace)/$(arg rplidar_node_name)/scan" />
+        <rosparam command="load" file="$(find laser_filters)/examples/angularfilter.yaml" />
+    </node>
 
     <!-- Rplidar Node-->
     <group if="$(arg subscribe_scan)" ns="$(arg rplidar_namespace)">
@@ -83,7 +80,6 @@
 
     <!-- RTAL-map Node -->
     <group ns="rtabmap">
-
         <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="$(arg rtabmap_args)">
             <param name="database_path"       type="string" value="$(arg database_path)"/>
             <param name="frame_id"            type="string" value="base_link"/>
@@ -98,29 +94,30 @@
             <remap from="move_base"            to="/move_base"/>
             
             <!-- inputs -->
-            <remap from="scan"            to="/$(arg rplidar_namespace)/$(arg rplidar_node_name)/scan"/>
+            <remap from="scan"            to="/scan_filtered"/>
             <remap from="rgb/image"       to="$(arg rgb_topic)"/>
             <remap from="depth/image"     to="$(arg depth_topic)"/>
             <remap from="rgb/camera_info" to="$(arg camera_info_topic)"/>
+            <remap from="odom"            to="$(arg odom_topic)"/>
 
             <!-- Fix odom covariance as in simulation the covariance in /odom topic is high (0.1 for linear and 0.05 for angular) -->
             <param name="odom_frame_id" value="odom"/>
-            <!--param name="odom_tf_linear_variance" value="0.001"/-->
-            <!--param name="odom_tf_angular_variance" value="0.001"/-->
-            
+            <param name="odom_tf_linear_variance" value="0.001"/>
+            <param name="odom_tf_angular_variance" value="0.001"/>
+
             <!-- scan relevant -->
             <param     if="$(arg subscribe_scan)" name="gen_scan" value="false"/> 
             <param unless="$(arg subscribe_scan)" name="gen_scan" value="true"/>
 
             <!-- feature type -->
-            <param name="Vis/FeatureType"              type="string" value="4"/>
-            <param name="Kp/DetectorStrategy"          type="string" value="4"/>
-            <param name="FAST/Gpu"                     type="string" value="false"/>
+            <param name="Vis/FeatureType"              type="string" value="0"/>
+            <param name="Kp/DetectorStrategy"          type="string" value="0"/>
 
             <!-- RTAB-Map's parameters: do "rosrun rtabmap rtabmap (double-dash)params" to see the list of available parameters. -->
             <param name="RGBD/ProximityBySpace"        type="string" value="true"/>   <!-- Local loop closure detection (using estimated position) with locations in WM -->
             <param name="RGBD/OptimizeFromGraphEnd"    type="string" value="false"/>  <!-- Set to false to generate map correction between /map and /odom -->
-            <param name="Kp/MaxDepth"                  type="string" value="4.0"/>
+            <param name="RGBD/SavedLocalizationIgnored" type="string" value="true"/>
+            <param name="Kp/MaxDepth"                  type="string" value="10.0"/>
             <param name="Reg/Strategy"                 type="string" value="0"/>      <!-- Loop closure transformation: 0=Visual, 1=ICP, 2=Visual+ICP -->
             <param name="Icp/CorrespondenceRatio"      type="string" value="0.3"/>
             <param name="Vis/MinInliers"               type="string" value="15"/>      <!-- 3D visual words minimum inliers to accept loop closure -->
@@ -131,9 +128,9 @@
             <param name="Rtabmap/TimeThr"              type="string" value="0"/>
             <param name="Mem/RehearsalSimilarity"      type="string" value="0.30"/>
             <param name="Reg/Force3DoF"                type="string" value="true"/>
-            <param name="GridGlobal/MinSize"           type="string" value="20"/>
+            <param name="GridGlobal/MinSize"           type="string" value="100"/>
 
-            <param unless="$(arg subscribe_scan)" name="Grid/FromDepth" value="true"/>
+            <param unless="$(arg subscribe_scan)" name="Grid/FromDepth" value="false"/>
             
             <!-- localization mode -->
             <param     if="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="false"/>
@@ -188,13 +185,20 @@
         <param name="local_costmap/robot_base_frame" value="$(arg base_frame_id)"/>
         <param name="DWAPlannerROS/global_frame_id" value="$(arg odom_frame_id)"/>
 
-        <remap from="odom" to="$(arg odom_topic)"/>
-        <remap from="scan" to="/$(arg rplidar_namespace)/$(arg rplidar_node_name)/scan"/>
+        <remap from="odom" to="$(arg odom_frame_id)"/>
+        <remap from="scan" to="/scan_filtered"/>
         <remap from="/map" to="/rtabmap/grid_map" />
     </node>
 
-    <node name="mask_rcnn" pkg="mask_rcnn_ros" type="mask_rcnn_node" output="screen">
-        <remap from="~input" to="/zed/zed_node/rgb/image_rect_color" />
-        <param name="~visualization" value="true" />
+    <node pkg="cmd_to_ctrl" type="cmd_to_ctrl" name="cmd_to_ctrl" output="screen">
+        <param name="length" value="1.2" type="double"/>
+    </node>
+
+    <node pkg="rosserial_arduino" type="serial_node.py" name="arduino1" output="screen">
+        <param name="port" value="/dev/ttyACM0"/>
+    </node>
+
+    <node pkg="rosserial_arduino" type="serial_node.py" name="arduino2" output="screen">
+        <param name="port" value="/dev/ttyACM1"/>
     </node>
 </launch>

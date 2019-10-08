@@ -46,7 +46,7 @@ depth:
 
 tracking:
     publish_tf:                 true                                # publish `odom -> base_link` TF
-    publish_map_tf:             true                                # publish `map -> odom` TF
+    publish_map_tf:             false                                # publish `map -> odom` TF
     world_frame:                'map'                               # the reference fixed frame (same as `map_frame` or `odometry_frame`)
     map_frame:                  'map'
     odometry_frame:             'odom'
@@ -62,8 +62,8 @@ tracking:
     init_odom_with_first_valid_pose: true                           # Enable to initialize the odometry with the first valid pose
     path_pub_rate:              2.0                                 # Path positions punlishing frequency
     path_max_count:             -1                                  # use '-1' for unlimited path size
-    two_d_mode:                 false                               # Force navigation on a plane. If true the Z value will be fixed to "fixed_z_value", roll and pitch to zero
-    fixed_z_value:              1.0                                 # Value to be used for Z coordinate if `two_d_mode` is true
+    two_d_mode:                 true                               # Force navigation on a plane. If true the Z value will be fixed to "fixed_z_value", roll and pitch to zero
+    fixed_z_value:              0                                 # Value to be used for Z coordinate if `two_d_mode` is true
 
 mapping:
     mapping_enabled:            false                               # True to enable mapping and fused point cloud pubblication
