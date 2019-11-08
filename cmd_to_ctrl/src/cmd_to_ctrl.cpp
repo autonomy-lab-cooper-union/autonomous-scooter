@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
 
     ros::NodeHandle n;
 
-    double L = 1.2;
+    double L = 1.1;
     n.getParam("length", L);
 
     ros::Publisher pub_steering = n.advertise<std_msgs::Float64>("control_steering", 1000);
@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
 }
 
 void twistCallback(const geometry_msgs::Twist::ConstPtr& msg, const ros::Publisher &pub_steering, const ros::Publisher &pub_speed, const double& L) {
-    float speed = sqrt((msg->linear.x)*(msg->linear.x) + (msg->linear.y)*(msg->linear.y)) * 20;
+    float speed = sqrt((msg->linear.x)*(msg->linear.x) + (msg->linear.y)*(msg->linear.y));
     if (msg->linear.x < 0) speed = -speed;
     float steering = twist_to_steering(msg, speed, L);
 
@@ -44,5 +44,5 @@ float twist_to_steering(const geometry_msgs::Twist::ConstPtr& msg, const float& 
     // add -pi/2 to pi/2
 
     // return atan(L/msg->angular.z*speed);
-    return atan(L*msg->angular.z*5/speed);
+    return atan(L*msg->angular.z/speed);
 }
