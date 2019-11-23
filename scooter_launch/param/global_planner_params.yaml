@@ -5,6 +5,8 @@ GlobalPlanner:                                  # Also see: http://wiki.ros.org/
   use_dijkstra: true                            # Use dijkstra's algorithm. Otherwise, A*, default true
   use_grid_path: false                          # Create a path that follows the grid boundaries. Otherwise, use a gradient descent method, default false
   
+  visualize_potential: true                     # For visulization in RVIZ
+
   allow_unknown: true                           # Allow planner to plan through unknown space, default true
                                                 #Needs to have track_unknown_space: true in the obstacle / voxel layer (in costmap_commons_param) to work
   planner_window_x: 0.0                         # default 0.0
@@ -15,6 +17,6 @@ GlobalPlanner:                                  # Also see: http://wiki.ros.org/
   planner_costmap_publish_frequency: 0.0        # default 0.0
   
   lethal_cost: 253                              # default 253
-  neutral_cost: 50                              # default 50
-  cost_factor: 3.0                              # Factor to multiply each cost from costmap by, default 3.0
+  neutral_cost: 66                              # default 50
+  cost_factor: 0.55                             # Factor to multiply each cost from costmap by, default 3.0
   publish_potential: true                       # Publish Potential Costmap (this is not like the navfn pointcloud2 potential), default true
