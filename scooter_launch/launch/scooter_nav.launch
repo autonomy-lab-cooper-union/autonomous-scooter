@@ -33,7 +33,7 @@
     <arg unless="$(arg localization)" name="rtabmap_args" value="--delete_db_on_start"/>
 
     <!-- Use Lidar or not -->
-    <arg name="subscribe_scan"                  default="true" />
+    <arg name="subscribe_scan"                  default="false" />
 
     <!-- move_base params -->
     <arg name="odom_frame_id"   default="odom"/>
@@ -110,8 +110,8 @@
             <param unless="$(arg subscribe_scan)" name="gen_scan" value="true"/>
 
             <!-- feature type -->
-            <param name="Vis/FeatureType"              type="string" value="8"/>
-            <param name="Kp/DetectorStrategy"          type="string" value="8"/>
+            <param name="Vis/FeatureType"              type="string" value="10"/>
+            <param name="Kp/DetectorStrategy"          type="string" value="10"/>
 
             <param name="Rtabmap/DetectionRate"        type="string" value="1"/>
 
@@ -195,7 +195,7 @@
         <param name="length" value="1.2" type="double"/>
     </node>
 
-    <node pkg="rosserial_arduino" type="serial_node.py" name="arduino1" output="screen">
+    <!-- <node pkg="rosserial_arduino" type="serial_node.py" name="arduino1" output="screen">
         <param name="port" value="/dev/ttyACM0"/>
-    </node>
+    </node> -->
 </launch>

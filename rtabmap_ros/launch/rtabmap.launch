@@ -119,13 +119,8 @@
   <arg if="$(arg rgbd_sync)"      name="rgbd_topic_relay"          default="$(arg rgbd_topic)"/>
   <arg unless="$(arg rgbd_sync)"  name="rgbd_topic_relay"          default="$(arg rgbd_topic)_relay"/>
 
-
-  <!--node if="$(arg compressed)" name="republish_rgb" type="republish" pkg="image_transport" args="$(arg rgb_image_transport) in:=$(arg rgb_topic) raw out:=$(arg rgb_topic_relay)" /-->
-  <!--node if="$(arg compressed)" name="republish_depth" type="republish" pkg="image_transport" args="$(arg depth_image_transport) in:=$(arg depth_topic) raw out:=$(arg depth_topic_relay)" /-->
-
   <!-- Nodes -->
   <group ns="$(arg namespace)">
-  <!-- group -->
      
     <!-- relays -->
     <group unless="$(arg stereo)">
@@ -189,6 +184,7 @@
           <remap from="rgb/camera_info" to="$(arg camera_info_topic)"/>
           <remap from="rgbd_image"      to="$(arg rgbd_topic_relay)"/>
           <remap from="odom"            to="$(arg odom_topic)"/>
+          <remap from="imu"             to="$(arg imu_topic)"/>
       
           <param name="frame_id"                    type="string" value="$(arg frame_id)"/>
           <param name="odom_frame_id"               type="string" value="$(arg vo_frame_id)"/>
@@ -239,6 +235,7 @@
       <remap from="scan"                   to="$(arg scan_topic)"/>
       <remap from="scan_cloud"             to="$(arg scan_cloud_topic)"/>
       <remap from="odom"                   to="$(arg odom_topic)"/>
+      <remap from="imu"                    to="$(arg imu_topic)"/>
       
       <param name="frame_id"                    type="string" value="$(arg frame_id)"/>
       <param name="odom_frame_id"               type="string" value="$(arg vo_frame_id)"/>

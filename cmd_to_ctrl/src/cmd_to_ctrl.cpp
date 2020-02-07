@@ -10,6 +10,8 @@
 geometry_msgs::Pose currentPose;
 double currentRoll, currentPitch, currentYaw;
 std::vector<geometry_msgs::PoseStamped> currentPath;
+float speed_actual;
+std::ofstream myfile;
 
 int main(int argc, char **argv) {
     ros::init(argc, argv, "cmd_to_control");
@@ -18,6 +20,8 @@ int main(int argc, char **argv) {
 
     double L = 1.1;
     n.getParam("length", L);
+
+    myfile.open("output.txt");
 
     ros::Publisher pub_steering = n.advertise<std_msgs::Float64>("control_steering", 1000);
     ros::Publisher pub_speed = n.advertise<std_msgs::Float64>("control_speed", 1000);
@@ -30,6 +34,7 @@ int main(int argc, char **argv) {
     ros::Subscriber sub_path = n.subscribe<nav_msgs::Path>("/move_base/TebLocalPlannerROS/local_plan", 1000, boost::bind(getCurrentPath, _1, pub_heading_angle));
 
     ros::spin();
+    myfile.close();
     return 0;
 }
 
@@ -64,9 +69,49 @@ void getHeadingAngle(const ros::Publisher &pub_heading_angle) {
     );
     tf::Matrix3x3 m(q);
     m.getRPY(r, p, y);
-    heading_angle_msg.data = y-currentYaw;
+    //heading_angle_msg.data = y-currentYaw;
+    //pub_heading_angle.publish(heading_angle_msg);
+
+
+    /* Heading Error */
+	float theta_h = y - currentYaw;
+	
+	/* Normalize to [-PI, PI] */
+	while(theta_h > PI)
+		theta_h -= 2 * PI;
+	while(theta_h < -PI)
+		theta_h += 2 * PI;
+
+	//float front_axle_vec[2] = {-cos(currentYaw + PI/2), -sin(currentYaw + PI/2)};
+	//float error_front_axle = front_axle_vec[0]*currentPath[closest_idx].pose.position.x + front_axle_vec[1]*currentPath[closest_idx].pose.position.y;
+    if(closest_idx + 1 == currentPath.size())
+        return;
+
+    float curr_x = currentPath[closest_idx].pose.position.x + LEART * cos(currentYaw);
+    float curr_y = currentPath[closest_idx].pose.position.y + LEART * cos(currentYaw);
+
+    float A = ( currentPath[closest_idx + 1].pose.position.y - curr_y ) / ( currentPath[closest_idx + 1].pose.position.x - curr_x);
+    float B = -1;
+    float C = curr_y - A*curr_x;
+
+    float error_front_axle =  ( abs(A*curr_x + B*curr_y + C) ) / ( sqrt(pow(A,2) + pow(B,2)) );
+
+	/* Cross Track Error */
+	float theta_e = atan( (K_CONSTANT * error_front_axle) / speed_actual);	
+
+	float delta = theta_h + theta_e;
+    heading_angle_msg.data = delta;
+
+    // Printing State Variables to file
+    myfile << "Current (x,y,yaw): (" << curr_x << ", " << curr_y << ", " << currentYaw <<")" << std::endl;
+    myfile << "Desired (x,y,yaw): (" << currentPath[closest_idx].pose.position.x << ", " << currentPath[closest_idx].pose.position.y << ", " << y <<")" << std::endl;
+    myfile << "Crosstrack Error: (" << error_front_axle << ")" << std::endl;
+    myfile << "Heading Error: (" << theta_h << ")" << std::endl;
+    myfile << "Published Heading Angle: (" << delta << ")\n" << std::endl;
     pub_heading_angle.publish(heading_angle_msg);
+	
 }
+
 
 
 void getCurrentPose(const nav_msgs::Odometry::ConstPtr& msg, const ros::Publisher &pub_current_yaw) {
@@ -88,6 +133,7 @@ void getCurrentPose(const nav_msgs::Odometry::ConstPtr& msg, const ros::Publishe
 
 void twistCallback(const geometry_msgs::Twist::ConstPtr& msg, const ros::Publisher &pub_steering, const ros::Publisher &pub_speed, const double& L) {
     float speed = sqrt((msg->linear.x)*(msg->linear.x) + (msg->linear.y)*(msg->linear.y))*2.5;
+    speed_actual = speed;
     if (msg->linear.x < 0) speed = -speed;
     float steering = twist_to_steering(msg, speed, L);
 

@@ -81,7 +81,9 @@ OdometryROS::OdometryROS(bool stereoParams, bool visParams, bool icpParams) :
 	previousStamp_(0.0),
 	expectedUpdateRate_(0.0),
 	odomStrategy_(Parameters::defaultOdomStrategy()),
-	waitIMUToinit_(false)
+	waitIMUToinit_(false),
+	imuProcessed_(false),
+	lastImuReceivedStamp_(0.0)
 {
 
 }
@@ -487,13 +489,21 @@ void OdometryROS::callbackIMU(const sensor_msgs::ImuConstPtr& msg)
 		{
 			SensorData data(imu, 0, stamp);
 			this->processData(data, msg->header.stamp);
+			imuProcessed_ = true;
+			lastImuReceivedStamp_ = stamp;
+
+			if(bufferedData_.isValid() && stamp >= bufferedData_.stamp())
+			{
+				processData(bufferedData_, ros::Time(bufferedData_.stamp()));
+			}
+			bufferedData_ = SensorData();
 		}
 	}
 }
 
 void OdometryROS::processData(const SensorData & data, const ros::Time & stamp)
 {
-	if(waitIMUToinit_ && odometry_->framesProcessed() == 0 && odometry_->getPose().isIdentity() && data.imu().empty())
+	if((waitIMUToinit_ && !imuProcessed_) && odometry_->framesProcessed() == 0 && odometry_->getPose().isIdentity() && data.imu().empty())
 	{
 		NODELET_WARN("odometry: waiting imu to initialize orientation (wait_imu_to_init=true)");
 		return;
@@ -502,6 +512,17 @@ void OdometryROS::processData(const SensorData & data, const ros::Time & stamp)
 	Transform groundTruth;
 	if(!data.imageRaw().empty() || !data.laserScanRaw().isEmpty())
 	{
+		if(odometry_->canProcessIMU() && data.imu().empty() && lastImuReceivedStamp_>0.0 && data.stamp() > lastImuReceivedStamp_)
+		{
+			//NODELET_WARN("Data received is more recent than last imu received, waiting for imu update to process it.");
+			if(bufferedData_.isValid())
+			{
+				NODELET_ERROR("Overwriting previous data! Make sure IMU is published faster than data rate.");
+			}
+			bufferedData_ = data;
+			return;
+		}
+
 		if(previousStamp_>0.0 && previousStamp_ >= stamp.toSec())
 		{
 			NODELET_WARN("Odometry: Detected not valid consecutive stamps (previous=%fs new=%fs). New stamp should be always greater than previous stamp. This new data is ignored. This message will appear only once.",
@@ -876,6 +897,9 @@ void OdometryROS::reset(const Transform & pose)
 	guessPreviousPose_.setNull();
 	previousStamp_ = 0.0;
 	resetCurrentCount_ = resetCountdown_;
+	imuProcessed_ = false;
+	bufferedData_= SensorData();
+	lastImuReceivedStamp_=0.0;
 	this->flushCallbacks();
 }
 

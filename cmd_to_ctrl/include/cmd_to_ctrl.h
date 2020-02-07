@@ -13,9 +13,15 @@
 #include "nav_msgs/Path.h"
 #include <cmath>
 #include <boost/bind.hpp>
+#include <boost/filesystem.hpp>
 #include <tf/tf.h>
 #include <vector>
+#include <fstream>
+#include <iostream>
 
+#define K_CONSTANT 1
+#define PI 3.14159265358
+#define LEART 1.1
 
 void getCurrentPose(const nav_msgs::Odometry::ConstPtr& msg, const ros::Publisher &pub_current_speed);
 void twistCallback(const geometry_msgs::Twist::ConstPtr& msg, const ros::Publisher &pub_steering, const ros::Publisher &pub_speed, const double& L);
